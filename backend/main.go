@@ -16,20 +16,36 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&model.Tablemodel{}, &model.Menumodel{})
+	db.AutoMigrate(&model.Tablemodel{}, &model.Menumodel{}, &model.Customerordermodel{}, &model.Order{}, &model.Auth{})
 
 	r := gin.Default()
 
 	tableHandler := handler.NewTablehandler(db)
 	menuHandler := handler.Newmenuhandler(db)
-	r.GET("/tables", tableHandler.GetTable)
-	r.POST("/tables", tableHandler.CreateTable)
-	r.PUT("/tables/whereidupdate/:id", tableHandler.UpdateTable)
-	r.DELETE("/tables/:id", tableHandler.DeleteTable)
+	customer_orders := handler.Neworderhandle(db)
+	authentication := handler.NewAuthhandler(db)
 
-	r.GET("/menus", menuHandler.GetAll)
-	r.POST("/menus", menuHandler.Create)
-	r.PUT("/menus/:id", menuHandler.Update)
-	r.DELETE("/menus/:id", menuHandler.Deletemenu)
+	admin := r.Group("/admin")
+	admin.Use(authentication.Midleware())
+	{
+
+		admin.GET("/tables", tableHandler.GetTable)
+		admin.POST("/tables", tableHandler.CreateTable)
+		admin.PUT("/tables/whereidupdate/:id", tableHandler.UpdateTable)
+		admin.DELETE("/tables/:id", tableHandler.DeleteTable)
+
+		admin.GET("/menus", menuHandler.GetAll)
+		admin.POST("/menus", menuHandler.Create)
+		admin.PUT("/menus/:id", menuHandler.Update)
+		admin.DELETE("/menus/:id", menuHandler.Deletemenu)
+
+		admin.GET("/customer_orders", customer_orders.GetAll)
+		admin.POST("/customer_orders", customer_orders.Create)
+		admin.PUT("/customer_orders/:id", customer_orders.Update)
+		admin.DELETE("/customer_orders/:id", customer_orders.Delete)
+	}
+
+	r.POST("/register", authentication.Register)
+	r.POST("/login", authentication.Login)
 	r.Run()
 }

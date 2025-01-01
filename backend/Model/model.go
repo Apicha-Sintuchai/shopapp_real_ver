@@ -18,12 +18,22 @@ type Menumodel struct {
 
 type Customerordermodel struct {
 	gorm.Model
-	Customer_at_table string
-	Orders            []Order
+	Customer_at_table string  `json:"customer_at_table"`
+	Orders            []Order `json:"orders" gorm:"foreignKey:CustomerordermodelID"`
+	Donestatus        string  `json:"donestatus"`
+	Status            string  `json:"status"`
+	Totalprice        string  `json:"totalprice"`
 }
 
 type Order struct {
-	NameMenu   string
-	Totalprice string
-	Option     string
+	gorm.Model
+	CustomerordermodelID uint   `json:"customerordermodel_id"`
+	NameMenu             string `json:"name_menu"`
+	Price                string `json:"price"`
+	Option               string `json:"option"`
+}
+
+type Auth struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
