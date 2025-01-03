@@ -13,6 +13,10 @@ type Orderhandler struct {
 	db *gorm.DB
 }
 
+type Day struct {
+	Day string `json:"day"`
+}
+
 func Neworderhandle(db *gorm.DB) *Orderhandler {
 	return &Orderhandler{db: db}
 }
@@ -56,6 +60,7 @@ func (h *Orderhandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, newOrder)
 }
 
+// จ่ายเงิน
 func (h *Orderhandler) Update(c *gin.Context) {
 	id := c.Param("id")
 	var updateOrder model.Customerordermodel
@@ -87,5 +92,35 @@ func (h *Orderhandler) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Order deleted successfully",
+	})
+}
+
+func (h *Orderhandler) GetMoneyByDay(c *gin.Context) {
+	var day Day
+	var tables []model.Customerordermodel
+
+	if err := c.ShouldBindJSON(&day); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := h.db.Where("status = ? AND donestatus = ? AND DATE(created_at) = ?", "ชำระเงินแล้ว", "สำเร็จ", day.Day).Find(&tables).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	var totalpriceday int
+	for _, v := range tables {
+		i, _ := strconv.Atoi(v.Totalprice)
+		totalpriceday += i
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":       tables,
+		"totalprice": totalpriceday,
 	})
 }

@@ -152,3 +152,4 @@ func (h *Menuhandler) Deletemenu(c *gin.Context) {
 		"delete": "successful",
 	})
 }
+

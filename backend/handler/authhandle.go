@@ -2,11 +2,14 @@ package handler
 
 import (
 	model "apicha/foodshop/Model"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -51,8 +54,14 @@ func (h *Authhandler) Register(c *gin.Context) {
 }
 
 func (h *Authhandler) Login(c *gin.Context) {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+	secretket := os.Getenv("SECRET_KEY")
+	fmt.Println(secretket)
 	var loginDetails model.Auth
-	hmacSampleSecret := []byte("secret")
+	hmacSampleSecret := []byte(secretket)
 	if err := c.BindJSON(&loginDetails); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -86,27 +95,26 @@ func (h *Authhandler) Login(c *gin.Context) {
 		})
 		return
 	}
-
-	c.SetCookie("token", tokenString, 3600, "/", "localhost", false, true)
-
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
+		"token":   tokenString,
 	})
 }
 
-func (h *Authhandler)Midleware() gin.HandlerFunc {
+func (h *Authhandler) Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		hmacSampleSecret := []byte("secret")
-		token, err := c.Cookie("token")
-		if err != nil {
+		hmacSampleSecret := []byte("dogfood")
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Unauthorized",
+				"error": "Authorization header required",
 			})
 			c.Abort()
 			return
 		}
 
-		tkn, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		tokenString := authHeader[len("Bearer "):]
+		tkn, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return hmacSampleSecret, nil
 		})
 		if err != nil {

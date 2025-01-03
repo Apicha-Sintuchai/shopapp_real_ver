@@ -1,0 +1,21 @@
+
+{
+    "carditem": [
+        {
+            "Name": "คิวอาร์โค๊ด",
+            "icon": "FaQrcode"
+        },
+        {
+            "Name": "ออเดอร์",
+            "icon": "GiFoodTruck"
+        },
+        {
+            "Name": "เพิ่มเมนู",
+            "icon": "MdMenuBook"
+        },
+        {
+            "Name": "report",
+            "icon": "TbReport"
+        }
+    ]
+}

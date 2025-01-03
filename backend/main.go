@@ -4,6 +4,7 @@ import (
 	model "apicha/foodshop/Model"
 	"apicha/foodshop/handler"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -25,8 +26,15 @@ func main() {
 	customer_orders := handler.Neworderhandle(db)
 	authentication := handler.NewAuthhandler(db)
 
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Cookie"}
+	config.AllowCredentials = true
+	r.Use(cors.New(config))
+
 	admin := r.Group("/admin")
-	admin.Use(authentication.Midleware())
+	admin.Use(authentication.Middleware())
 	{
 
 		admin.GET("/tables", tableHandler.GetTable)
@@ -40,6 +48,7 @@ func main() {
 		admin.DELETE("/menus/:id", menuHandler.Deletemenu)
 
 		admin.GET("/customer_orders", customer_orders.GetAll)
+		admin.GET("/customer_orders/GetMoneyByDay", customer_orders.GetMoneyByDay)
 		admin.POST("/customer_orders", customer_orders.Create)
 		admin.PUT("/customer_orders/:id", customer_orders.Update)
 		admin.DELETE("/customer_orders/:id", customer_orders.Delete)
