@@ -27,9 +27,9 @@ func main() {
 	authentication := handler.NewAuthhandler(db)
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{"http://localhost:5173"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Cookie"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Cookie", "Access-Control-Allow-Origin"}
 	config.AllowCredentials = true
 	r.Use(cors.New(config))
 

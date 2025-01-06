@@ -1,28 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import App from '@/App.vue'
-import SomeThing from '@/views/SomeThing.vue'
 import MenuItem from '@/views/MenuItem.vue'
+import LoginPage from '@/views/LoginPage.vue'
+import OrderPage from '@/views/OrderPage.vue'
+import MenuPage from '@/views/MenuPage.vue'
+import RecievedPage from '@/views/RecievedPage.vue'
+import PaymentPage from '@/views/PaymentPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'Login',
+      component: LoginPage,
+    },
+
+    {
+      path: '/MenuItems',
       name: 'MenuItems',
       component: MenuItem,
+
     },
     {
-      path: '/about',
-      name: 'about',
-      component: SomeThing,
+      path: '/Orderpage',
+      name: 'Orderpage',
+      component: OrderPage,
 
     },
-    // {
-    //   path: '/Menuitems',
-    //   name: 'MenuItems',
-    //   component: MenuItem,
+    {
+      path: '/Menupage',
+      name: 'Menupage',
+      component: MenuPage,
 
-    // },
+    },
+    {
+      path: '/Recivepage',
+      name: 'Recivepage',
+      component: RecievedPage,
+    },
+    {
+      path: '/Paymentpage',
+      name: 'Paymentpage',
+      component: PaymentPage,
+    },
   ],
 })
 
