@@ -23,7 +23,7 @@ func Neworderhandle(db *gorm.DB) *Orderhandler {
 
 func (h *Orderhandler) GetAll(c *gin.Context) {
 	var findall []model.Customerordermodel
-	if err := h.db.Preload("Orders").Where("status = ?", "ยังไม่ชำระเงิน").Find(&findall).Error; err != nil {
+	if err := h.db.Preload("Orders").Where("donestatus = ?", "").Find(&findall).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -79,6 +79,28 @@ func (h *Orderhandler) Update(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, updateOrder)
+}
+
+func (h *Orderhandler) Donestatus(c *gin.Context) {
+	id := c.Param("id")
+	var changestatus model.Customerordermodel
+
+	if err := h.db.First(&changestatus, id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	changestatus.Donestatus = "สำเร็จ"
+
+	if err := h.db.Save(&changestatus).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, changestatus)
 }
 
 func (h *Orderhandler) Delete(c *gin.Context) {

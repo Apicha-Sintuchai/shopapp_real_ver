@@ -51,6 +51,7 @@ func main() {
 		admin.GET("/customer_orders/GetMoneyByDay", customer_orders.GetMoneyByDay)
 		admin.POST("/customer_orders", customer_orders.Create)
 		admin.PUT("/customer_orders/:id", customer_orders.Update)
+		admin.PUT("/customer_orders/status/:id", customer_orders.Donestatus)
 		admin.DELETE("/customer_orders/:id", customer_orders.Delete)
 	}
 
