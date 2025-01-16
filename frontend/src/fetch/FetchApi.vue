@@ -56,6 +56,24 @@ export default {
         }
       })
       return response
+    },
+
+    async getmenu(){
+      const response = await axios.get("http://localhost:8080/admin/menus",{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      return response
+    },
+
+    async addmenu(data){
+      const response = await axios.post("http://localhost:8080/admin/menus",data,{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      return response
     }
   },
 };

@@ -36,12 +36,11 @@ import { ref, reactive, onMounted } from "vue";
 import QRCode from "qrcode";
 import FetchApi from "@/fetch/FetchApi.vue";
 import Swal from "sweetalert2";
-import { useRouter } from 'vue-router';
+
 
 export default {
   name: "TableCard",
   setup() {
-    const router = useRouter()
     const title = ref([]);
     const formdata = reactive({
       table_number: "",
@@ -52,10 +51,9 @@ export default {
         const res = await FetchApi.methods.GetTable();
         title.value = res.data.data;
       } catch (err) {
-       if(err.response.data.error == "Unauthorized"){
-        localStorage.removeItem("token")
-        router.push("/")
-       }
+        if(err){
+          alert("มีบางอย่างผิดพลาด")
+        }
       }
     };
 

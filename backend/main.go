@@ -33,6 +33,7 @@ func main() {
 	config.AllowCredentials = true
 	r.Use(cors.New(config))
 
+	r.Static("/Picture", "./Picture/")
 	admin := r.Group("/admin")
 	admin.Use(authentication.Middleware())
 	{
