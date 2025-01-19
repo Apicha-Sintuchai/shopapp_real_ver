@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	dsn := "host=localhost user=postgres password=0126 dbname=qrcode_order port=5432 sslmode=disable TimeZone=Asia/Bangkok"
+	dsn := "host=localhost user=apicha_user password=Mypassword dbname=qrcode_order port=5432 sslmode=disable TimeZone=Asia/Bangkok"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)

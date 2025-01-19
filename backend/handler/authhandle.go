@@ -59,7 +59,6 @@ func (h *Authhandler) Login(c *gin.Context) {
 		fmt.Println("Error loading .env file")
 	}
 	secretket := os.Getenv("SECRET_KEY")
-	fmt.Println(secretket)
 	var loginDetails model.Auth
 	hmacSampleSecret := []byte(secretket)
 	if err := c.BindJSON(&loginDetails); err != nil {
@@ -102,8 +101,13 @@ func (h *Authhandler) Login(c *gin.Context) {
 }
 
 func (h *Authhandler) Middleware() gin.HandlerFunc {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+	secretket := os.Getenv("SECRET_KEY")
 	return func(c *gin.Context) {
-		hmacSampleSecret := []byte("dogfood")
+		hmacSampleSecret := []byte(secretket)
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{

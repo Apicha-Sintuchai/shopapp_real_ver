@@ -82,7 +82,6 @@
             <th scope="col" class="p-4 text-left border-b-2 border-gray-200">{{ item.Price }}</th>
             <th scope="col" class="p-4 text-left border-b-2 border-gray-200">{{ item.Status }}</th>
             <th scope="col" class="p-4 text-left border-b-2 border-gray-200">{{ item.Category }}</th>
-
           </tr>
         </tbody>
       </table>

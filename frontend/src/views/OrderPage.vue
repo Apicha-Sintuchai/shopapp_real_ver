@@ -28,7 +28,14 @@
         <p v-if="selectedItem">โต๊ะที่ &nbsp;{{ selectedItem.customer_at_table }}</p>
         <p class="font-bold text-xs">รายการ</p>
         <div v-for="orderitem in selectedItem.orders" :key="orderitem.ID">
-          <p>{{ orderitem.name_menu }}</p>
+          <div class="flex  gap-8">
+            <p>{{ orderitem.name_menu }}</p>
+          
+          <p v-if="orderitem.option">เพิ่มเติม</p>
+          <p v-if="`${orderitem.option != null} `">{{ orderitem.option }}</p>
+          </div>
+          
+          
         </div>
 
         <button class="bg-red-500 text-white px-4 py-2 rounded mt-4" @click="closeModal">
