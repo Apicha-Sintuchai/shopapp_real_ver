@@ -49,13 +49,19 @@ func main() {
 		admin.DELETE("/menus/:id", menuHandler.Deletemenu)
 
 		admin.GET("/customer_orders", customer_orders.GetAll)
-		admin.GET("/customer_orders/GetMoneyByDay", customer_orders.GetMoneyByDay)
+		admin.GET("/customer_orders/GetMoney", customer_orders.GetMoney)
+		admin.GET("/customer_orders/Getdata_unpayment", customer_orders.Dopayment)
 		admin.POST("/customer_orders", customer_orders.Create)
 		admin.PUT("/customer_orders/:id", customer_orders.Update)
+		admin.PUT("/customer_orders/updatepayment/:id", customer_orders.Updatepayment)
 		admin.PUT("/customer_orders/status/:id", customer_orders.Donestatus)
 		admin.DELETE("/customer_orders/:id", customer_orders.Delete)
 	}
 
+	client := r.Group("/customer")
+	{
+		client.GET("/menus", menuHandler.GetAll)
+	}
 	r.POST("/register", authentication.Register)
 	r.POST("/login", authentication.Login)
 	r.Run()

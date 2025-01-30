@@ -1,9 +1,9 @@
 <template>
   <div class="grid grid-cols-2">
-    <div class=" p-10">
+    <div class=" p-10" >
       <form class="flex flex-col gap-y-8" @submit="onsubmitform">
         <div class="space-y-2">
-          <label class="block text-gray-700 text-sm font-semibold">ชื่อเมนู</label>
+          <label class="block text-gray-950 text-sm font-semibold">ชื่อเมนู</label>
           <input type="text" v-model="onsubmitdata.NameMenu"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
             placeholder="กรุณากรอกชื่อเมนู">
@@ -31,7 +31,7 @@
 
 
         <div class="space-y-2">
-          <label class="block text-gray-700 text-sm font-semibold">หมวดหมู่</label>
+          <label class="block text-gray-950 text-sm font-semibold">หมวดหมู่</label>
           <input type="text" v-model="onsubmitdata.Category"
             class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
             placeholder="กรุณากรอกราคา เฉพาะตัวเลข">
@@ -61,7 +61,7 @@
       </form>
 
     </div>
-    <div>
+    <div class="bg-slate-100">
       <table class="w-full border-collapse">
         <thead>
           <tr>

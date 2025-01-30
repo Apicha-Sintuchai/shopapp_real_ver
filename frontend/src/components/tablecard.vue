@@ -9,18 +9,18 @@
   <div class="mx-36 my-48">
     <div class="relative grid grid-cols-4 gap-8">
       <div v-for="item in title" :key="item.id">
-        <div class="max-w-72 bg-gray-300 rounded-xl p-4 shadow-lg">
+        <div class="max-w-72 bg-gray-300 rounded-xl p-16 shadow-lg">
           <div class="flex flex-col justify-center items-center gap-y-12">
             <img src="/qr-code.png" alt="QR Code" class="w-24 h-24" />
             <h1 class="font-bold text-3xl">{{ item.table_number }}</h1>
-            <div class="flex justify-between items-center gap-8">
-              <button @click="printQRCode(item.table_number)" class="bg-blue-500 text-white px-4 py-2 rounded">
+            <div class="flex justify-between items-center  ">
+              <button @click="printQRCode(item.table_number)" class="bg-blue-500 text-white px-4 py-2 rounded-l-xl w-16">
                 ปริ้น
               </button>
-              <button @click="() => toggleUpdateAlert(item)" class="bg-yellow-500 text-white px-4 py-2 rounded">
+              <button @click="() => toggleUpdateAlert(item)" class="bg-yellow-500 text-white px-4 py-2  w-24">
                 แก้ไข
               </button>
-              <button @click="deleteById(item.id)" class="bg-red-500 text-white px-4 py-2 rounded">
+              <button @click="deleteById(item.id)" class="bg-red-500 text-white px-4 py-2 rounded-r-xl w-16 ">
                 ลบ
               </button>
             </div>
@@ -52,7 +52,7 @@ export default {
         title.value = res.data.data;
       } catch (err) {
         if(err){
-          alert("มีบางอย่างผิดพลาด")
+          alert("มีบางอย่างผิดพลาด โปรด Refresh หน้าจออีกรอบ")
         }
       }
     };

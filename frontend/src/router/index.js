@@ -6,6 +6,7 @@ import MenuPage from '@/views/MenuPage.vue'
 import RecievedPage from '@/views/RecievedPage.vue'
 import PaymentPage from '@/views/PaymentPage.vue'
 import QrcodePage from '@/views/QrcodePage.vue'
+import Customer_Menu from '@/views/customer/Customer_Menu.vue'
 
 
 const router = createRouter({
@@ -51,11 +52,25 @@ const router = createRouter({
       name: 'Qrcodepage',
       component: QrcodePage,
     },
+    {
+      path: '/customer_menu',
+      name: 'customer_menu',
+      component: Customer_Menu,
+    }
   ],
 })
 
+
+
+
+
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
+
+
+  if (to.name === 'customer_menu') {
+    return next();
+  }
 
   if (!token && to.name !== 'Login') {
     return next({ name: 'Login' });

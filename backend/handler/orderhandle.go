@@ -117,32 +117,48 @@ func (h *Orderhandler) Delete(c *gin.Context) {
 	})
 }
 
-func (h *Orderhandler) GetMoneyByDay(c *gin.Context) {
-	var day Day
-	var tables []model.Customerordermodel
-
-	if err := c.ShouldBindJSON(&day); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	if err := h.db.Where("status = ? AND donestatus = ? AND DATE(created_at) = ?", "ชำระเงินแล้ว", "สำเร็จ", day.Day).Find(&tables).Error; err != nil {
+func (h *Orderhandler) GetMoney(c *gin.Context) {
+	var findall []model.Customerordermodel
+	if err := h.db.Preload("Orders").Where("donestatus = ? AND status = ? ", "สำเร็จ", "ชำระเงินแล้ว").Find(&findall).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	var totalpriceday int
-	for _, v := range tables {
-		i, _ := strconv.Atoi(v.Totalprice)
-		totalpriceday += i
+	c.JSON(http.StatusOK, findall)
+
+}
+
+func (h *Orderhandler) Dopayment(c *gin.Context) {
+	var findall []model.Customerordermodel
+	if err := h.db.Preload("Orders").Where("status = ? ","ยังไม่ชำระเงิน").Find(&findall).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, findall)
+}
+
+func (h *Orderhandler) Updatepayment(c *gin.Context) {
+	Id := c.Param("id")
+	var update model.Customerordermodel
+
+	if err := h.db.First(&update, Id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data":       tables,
-		"totalprice": totalpriceday,
-	})
+	update.Status = "ชำระเงินแล้ว"
+
+	if err := h.db.Save(&update).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, update)
 }

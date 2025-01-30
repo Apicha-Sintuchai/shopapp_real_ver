@@ -1,80 +1,128 @@
 <script>
-import axios from 'axios';
-const token = localStorage.getItem('token');
+import axios from 'axios'
+const token = localStorage.getItem('token')
 export default {
   name: 'FetchApi',
   methods: {
     async Login(url, payload) {
-      const response = await axios.post(url, payload);
-      return response.data;
+      const response = await axios.post(url, payload)
+      return response.data
     },
     async GetTable() {
       const response = await axios.get('http://localhost:8080/admin/tables', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      return response;
+      })
+      return response
     },
     async AdddataTable(payload) {
-      const response = await axios.post(`http://localhost:8080/admin/tables`, {
-        "table_number": payload
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await axios.post(
+        `http://localhost:8080/admin/tables`,
+        {
+          table_number: payload,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       return response
     },
     async UpdateTable(id, payload) {
-      const response = await axios.put(`http://localhost:8080/admin/tables/whereidupdate/${id}`, {
-        "table_number": payload
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      return response
-
-
-    },
-    async GetOrder() {
-      const response = await axios.get("http://localhost:8080/admin/customer_orders",
+      const response = await axios.put(
+        `http://localhost:8080/admin/tables/whereidupdate/${id}`,
+        {
+          table_number: payload,
+        },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       )
+      return response
+    },
+    async GetOrder() {
+      const response = await axios.get('http://localhost:8080/admin/customer_orders', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       return response
     },
 
     async donemenu(id) {
-      const response = await axios.put(`http://localhost:8080/admin/customer_orders/status/${id}`, {}, {
+      const response = await axios.put(
+        `http://localhost:8080/admin/customer_orders/status/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      return response
+    },
+
+    async getmenu() {
+      const response = await axios.get('http://localhost:8080/admin/menus', {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
       return response
     },
 
-    async getmenu(){
-      const response = await axios.get("http://localhost:8080/admin/menus",{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+    async addmenu(data) {
+      const response = await axios.post('http://localhost:8080/admin/menus', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       return response
     },
 
-    async addmenu(data){
-      const response = await axios.post("http://localhost:8080/admin/menus",data,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+    async GetMoney() {
+      const response = await axios.get('http://localhost:8080/admin/customer_orders/GetMoney', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       return response
-    }
+    },
+
+    async Getdata_unpayment() {
+      const response = await axios.get(
+        'http://localhost:8080/admin/customer_orders/Getdata_unpayment',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      return response
+    },
+    async updatepayment(id) {
+      const response = await axios.put(
+        `http://localhost:8080/admin/customer_orders/updatepayment/${id}`,{},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      return response
+    },
+
+    async customer_getmenu(){
+    const response = await axios.get("http://localhost:8080/customer/menus")
+    return response
+  }
   },
-};
+
+
+ 
+}
 </script>
