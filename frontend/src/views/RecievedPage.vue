@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import FetchApi from '@/fetch/FetchApi.vue'
+import FetchApi from '@/fetch/FetchApi'
 import { onMounted, ref, computed } from 'vue'
 
 export default {
@@ -53,7 +53,7 @@ export default {
     const day = ref(null)
 
     const Getmoney = async () => {
-      const response = await FetchApi.methods.GetMoney()
+      const response = await FetchApi.GetMoney()
       item.value = response.data
       item.value.forEach((valve) => {
         const fullDateTime = valve.CreatedAt.split('T')

@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import FetchApi from '@/fetch/FetchApi.vue'
+import FetchApi from '@/fetch/FetchApi'
 import Swal from 'sweetalert2'
 import { onMounted, ref, computed } from 'vue'
 import generatePayload from 'promptpay-qr'
@@ -66,7 +66,7 @@ export default {
     const day = ref(null)
 
     const Getmoney = async () => {
-      const response = await FetchApi.methods.Getdata_unpayment()
+      const response = await FetchApi.Getdata_unpayment()
       item.value = response.data
       item.value.forEach((valve) => {
         const fullDateTime = valve.CreatedAt.split('T')
@@ -108,7 +108,7 @@ export default {
         const payload = await generatePayload(value, { amount: parseNumber })
         const qrCodeDataUrl = await QRCode.toDataURL(payload)
 
-        await FetchApi.methods.updatepayment(id)
+        await FetchApi.updatepayment(id)
         const doc = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',

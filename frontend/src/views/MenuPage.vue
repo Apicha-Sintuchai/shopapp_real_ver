@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import FetchApi from '@/fetch/FetchApi.vue';
+import FetchApi from '@/fetch/FetchApi';
 import { onMounted, reactive, ref } from 'vue';
 
 export default {
@@ -114,13 +114,13 @@ export default {
       formdata.append("status",onsubmitdata.Status)
       formdata.append("category",onsubmitdata.Category)
       console.log(formdata)
-      const res = await FetchApi.methods.addmenu(formdata)
+      const res = await FetchApi.addmenu(formdata)
       console.log(res)
       getdata()
     }
 
     const getdata = async () => {
-      const res = await FetchApi.methods.getmenu();
+      const res = await FetchApi.getmenu();
       getitem.value = res.data.data;
     };
 

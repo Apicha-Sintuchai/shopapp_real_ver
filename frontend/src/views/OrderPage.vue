@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import FetchApi from '@/fetch/FetchApi.vue';
+import FetchApi from '@/fetch/FetchApi';
 import { onMounted, ref } from 'vue';
 
 export default {
@@ -59,7 +59,7 @@ export default {
 
     const GetData = async () => {
       try {
-        const res = await FetchApi.methods.GetOrder();
+        const res = await FetchApi.GetOrder();
         title.value = res.data;
         title.value.forEach((valve) => {
           const fullDateTime = valve.CreatedAt.split("T");
@@ -86,7 +86,7 @@ export default {
     };
 
     const changedonestatus = async (id) => {
-      await FetchApi.methods.donemenu(id)
+      await FetchApi.donemenu(id)
       GetData()
     }
 

@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import FetchApi from '@/fetch/FetchApi.vue';
+import FetchApi from '@/fetch/FetchApi';
 
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router';
@@ -65,8 +65,8 @@ const handleSubmit = async (event) => {
   const url = 'http://localhost:8080/login';
   const payload = { username, password };
   try {
-    const response = await FetchApi.methods.Login(url, payload);
-    await localStorage.setItem('token', response.token);
+    const response = await FetchApi.Login(url, payload);
+    await sessionStorage.setItem('token', response.token);
     router.push('/MenuItems');
   } catch (error) {
     if (error.response && error.response.data) {

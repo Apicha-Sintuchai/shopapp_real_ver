@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import FetchApi from '@/fetch/FetchApi.vue'
+import FetchApi from '@/fetch/FetchApi'
 import { onMounted, ref } from 'vue'
 
 export default {
@@ -27,7 +27,7 @@ export default {
     const getitem = ref([])
 
     const getdata = async () => {
-      const res = await FetchApi.methods.customer_getmenu()
+      const res = await FetchApi.customer_getmenu()
        getitem.value =  await res.data.data
 
       console.log(getitem.value)

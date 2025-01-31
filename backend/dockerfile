@@ -1,0 +1,15 @@
+FROM golang:1.23.5-bookworm
+
+WORKDIR /backend/app
+
+COPY . ./
+
+RUN go mod download
+
+RUN go build -o /godocker .
+
+RUN chmod +x /godocker
+
+EXPOSE 8080
+
+CMD ["/godocker"]
