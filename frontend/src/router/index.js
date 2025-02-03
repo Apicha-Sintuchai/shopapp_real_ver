@@ -53,7 +53,7 @@ const router = createRouter({
       component: QrcodePage,
     },
     {
-      path: '/customer_menu',
+      path: '/customer_menu/:id',
       name: 'customer_menu',
       component: Customer_Menu,
     }

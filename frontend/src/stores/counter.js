@@ -1,12 +1,21 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
+export const useUserOrder = defineStore('Userorder', {
+  state: () => ({
+    data: {
+      customer_at_table: '',
+      order: [],
+    },
+  }),
+  actions: {
+    addorder(customer_at_table, order) {
+      this.data.customer_at_table = customer_at_table
+      this.data.order.push(order)
 
-  return { count, doubleCount, increment }
+      console.log({
+        customer: this.data.customer_at_table,
+        order:this.data.order
+      })
+    },
+  },
 })

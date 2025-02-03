@@ -19,7 +19,11 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+    volumes:
+      - PictureData:/backend/app/Picture
 volumes:
    shop_postgre:
+    driver: local
+   PictureData:
     driver: local
     
