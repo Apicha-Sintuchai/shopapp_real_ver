@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-col justify-center p-20 gap-y-6">
       <div class="flex justify-end items-center"></div>
-      <table class="w-full border-collapse">
+      <table class="w-full border-collapse overflow-x:auto">
         <thead>
           <tr>
             <th scope="col" class="p-4 text-left border-b-2 border-gray-200">ปี-เดือน-วัน</th>
@@ -60,6 +60,7 @@ import generatePayload from 'promptpay-qr'
 import QRCode from 'qrcode'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
+
 export default {
   setup() {
     const item = ref([])
@@ -70,8 +71,7 @@ export default {
       item.value = response.data
       item.value.forEach((valve) => {
         const fullDateTime = valve.CreatedAt.split('T')
-        const dateOnly = fullDateTime[0]
-        valve.dateOnly = dateOnly
+        valve.dateOnly = fullDateTime[0]
       })
     }
 
@@ -79,21 +79,98 @@ export default {
       return item.value.filter((valve) => valve.status === 'ยังไม่ชำระเงิน')
     })
 
+    const generateReceiptPDF = async (id, amount, paymentMethod) => {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      doc.setFontSize(24)
+      doc.setTextColor(41, 128, 185)
+      doc.text('Restaurant Name', doc.internal.pageSize.width / 2, 20, { align: 'center' })
+
+      doc.setFontSize(18)
+      doc.setTextColor(0, 0, 0)
+      doc.text('Payment Receipt', doc.internal.pageSize.width / 2, 30, { align: 'center' })
+
+      doc.setDrawColor(200, 200, 200)
+      doc.line(20, 35, doc.internal.pageSize.width - 20, 35)
+
+      const selectedOrder = item.value.find((order) => order.ID === id)
+
+      doc.setFontSize(12)
+      doc.setTextColor(80, 80, 80)
+      doc.text('Order Details:', 20, 45)
+      doc.text(`Table: ${selectedOrder.customer_at_table}`, 20, 52)
+      doc.text(`Order ID: ${id}`, 20, 59)
+      doc.text(`Date: ${selectedOrder.dateOnly}`, doc.internal.pageSize.width - 60, 52)
+      doc.text(`Total: ${amount} THB`, doc.internal.pageSize.width - 60, 59)
+      doc.text(`Payment Method: ${paymentMethod}`, 20, 66)
+
+      const orderItems = selectedOrder.orders.map((order, index) => [
+        index + 1,
+        order.name_menu,
+        order.price,
+      ])
+
+      doc.autoTable({
+        startY: 75,
+        head: [['No.', 'Item Name', 'Price (THB)']],
+        body: orderItems,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontSize: 12,
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fontSize: 10,
+          halign: 'center',
+          textColor: [50, 50, 50],
+        },
+        columnStyles: {
+          0: { cellWidth: 20 },
+          1: { cellWidth: 100 },
+          2: { cellWidth: 40 },
+        },
+        margin: { left: 20, right: 20 },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+      })
+
+      const footerY = doc.previousAutoTable.finalY + 15
+      doc.setFontSize(10)
+      doc.setTextColor(128, 128, 128)
+      doc.text('Thank you for your business!', doc.internal.pageSize.width / 2, footerY, {
+        align: 'center',
+      })
+
+      doc.save(`Receipt-${id}.pdf`)
+    }
+
     const confirmpaymentcash = async (id) => {
       await Swal.fire({
         icon: 'warning',
-        title: 'หลังจากคุณกดยืนยันไป แล้ว ระบบ จะยืนยันแล้วข้อมูลชุดนี้จะหายไป ยืนยันหรือไม่',
+        title: 'หลังจากคุณกดยืนยัน ระบบจะเปลี่ยนสถานะเป็นชำระเงินและข้อมูลชุดนี้จะหายไป ยืนยันหรือไม่?',
         showCancelButton: true,
         confirmButtonText: 'ยืนยัน',
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          console.log(id)
+          await FetchApi.updatepayment(id)
+          const selectedOrder = item.value.find((order) => order.ID === id)
+          if (selectedOrder) {
+            generateReceiptPDF(id, selectedOrder.totalprice, 'Cash')
+            Getmoney()
+          }
         }
       })
     }
 
     const confirmPromptPay = async (id, amount) => {
-      console.log(id)
       const { value } = await Swal.fire({
         icon: 'warning',
         title: 'กรุณาใส่ promptpay ถ้าคุณกดยืนยัน ระบบจะเปลี่ยนสถานะเป็นชำระเงินทันที',
@@ -109,6 +186,8 @@ export default {
         const qrCodeDataUrl = await QRCode.toDataURL(payload)
 
         await FetchApi.updatepayment(id)
+        generateReceiptPDF(id, amount, 'PromptPay')
+
         const doc = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
@@ -126,53 +205,7 @@ export default {
         doc.setDrawColor(200, 200, 200)
         doc.line(20, 35, doc.internal.pageSize.width - 20, 35)
 
-        const selectedOrder = item.value.find((order) => order.ID === id)
-
-        doc.setFontSize(12)
-        doc.setTextColor(80, 80, 80)
-
-        doc.text('Order Details:', 20, 45)
-        doc.text(`Table: ${selectedOrder.customer_at_table}`, 20, 52)
-        doc.text(`Order ID: ${id}`, 20, 59)
-
-        doc.text(`Date: ${selectedOrder.dateOnly}`, doc.internal.pageSize.width - 60, 52)
-        doc.text(`Total: ${amount} THB`, doc.internal.pageSize.width - 60, 59)
-
-        const orderItems = selectedOrder.orders.map((order, index) => [
-          index + 1,
-          order.name_menu,
-          order.price,
-        ])
-
-        doc.autoTable({
-          startY: 70,
-          head: [['No.', 'Item Name', 'Price (THB)']],
-          body: orderItems,
-          theme: 'grid',
-          headStyles: {
-            fillColor: [41, 128, 185],
-            textColor: 255,
-            fontSize: 12,
-            halign: 'center',
-            fontStyle: 'bold',
-          },
-          bodyStyles: {
-            fontSize: 10,
-            halign: 'center',
-            textColor: [50, 50, 50],
-          },
-          columnStyles: {
-            0: { cellWidth: 20 },
-            1: { cellWidth: 100 },
-            2: { cellWidth: 40 },
-          },
-          margin: { left: 20, right: 20 },
-          alternateRowStyles: {
-            fillColor: [245, 245, 245],
-          },
-        })
-
-        const finalY = doc.previousAutoTable.finalY + 15
+        const finalY = 75
         doc.setFontSize(14)
         doc.text('Scan to Pay via PromptPay', doc.internal.pageSize.width / 2, finalY, {
           align: 'center',
@@ -192,6 +225,7 @@ export default {
         doc.save(`Receipt-${id}.pdf`)
       }
     }
+
     onMounted(() => {
       Getmoney()
     })

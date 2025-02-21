@@ -12,6 +12,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
     "axios": "^1.7.9",
     "canvas": "^3.1.0",
     "jspdf": "^2.5.2",
@@ -36,7 +38,8 @@
     "eslint-plugin-vue": "^9.30.0",
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
-    "prettier": "^3.3.3",
+    "prettier": "^3.5.1",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.5",
     "vite-plugin-vue-devtools": "^7.6.8",

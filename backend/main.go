@@ -61,6 +61,7 @@ func main() {
 	client := r.Group("/customer")
 	{
 		client.GET("/menus", menuHandler.GetAll)
+		client.POST("/customer_orders", customer_orders.Create)
 	}
 	r.POST("/register", authentication.Register)
 	r.POST("/login", authentication.Login)

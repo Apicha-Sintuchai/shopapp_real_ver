@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MenuItem from '@/views/MenuItem.vue'
-import LoginPage from '@/views/LoginPage.vue'
-import OrderPage from '@/views/OrderPage.vue'
-import MenuPage from '@/views/MenuPage.vue'
-import RecievedPage from '@/views/RecievedPage.vue'
-import PaymentPage from '@/views/PaymentPage.vue'
-import QrcodePage from '@/views/QrcodePage.vue'
+import MenuItem from '@/views/admin/MenuItem.vue'
+import LoginPage from '@/views/admin/LoginPage.vue'
+import OrderPage from '@/views/admin/OrderPage.vue'
+import MenuPage from '@/views/admin/MenuPage.vue'
+import RecievedPage from '@/views/admin/RecievedPage.vue'
+import PaymentPage from '@/views/admin/PaymentPage.vue'
+import QrcodePage from '@/views/admin/QrcodePage.vue'
 import Customer_Menu from '@/views/customer/Customer_Menu.vue'
+import Cart_cart from '@/views/customer/cart_cart.vue'
 
 
 const router = createRouter({
@@ -56,7 +57,12 @@ const router = createRouter({
       path: '/customer_menu/:id',
       name: 'customer_menu',
       component: Customer_Menu,
-    }
+    },
+    {
+      path: '/order_cart',
+      name: 'order_cart',
+      component: Cart_cart,
+    },
   ],
 })
 

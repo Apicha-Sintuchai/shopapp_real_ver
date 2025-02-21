@@ -103,6 +103,14 @@ const FetchApi = {
     const response = await axios.get("http://localhost:8080/customer/menus");
     return response;
   },
+  
+  async DeleteMenu(id){
+    const token = await this.getToken();
+    const response = await axios.delete(`http://localhost:8080/admin/menus/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    return response
+  }
 };
 
 export default FetchApi;

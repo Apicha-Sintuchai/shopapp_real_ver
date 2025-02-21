@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-36 my-48">
-    <div class="relative grid grid-cols-4 gap-8">
+  <div class="w-full flex justify-center items-center">
+    <div class="relative grid grid-cols-4 gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 ">
       <div v-for="item in title" :key="item.ID">
         <div class="max-w-72 bg-gray-300 rounded-xl p-4 shadow-lg">
           <div class="flex flex-col justify-center items-center gap-y-12">
